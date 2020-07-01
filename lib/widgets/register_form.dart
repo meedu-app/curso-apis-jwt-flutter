@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_api_rest/api/my_api.dart';
+import 'package:flutter_api_rest/utils/dialogs.dart';
 import 'package:flutter_api_rest/utils/responsive.dart';
 import 'input_text.dart';
 
@@ -11,10 +13,19 @@ class _RegisterFormState extends State<RegisterForm> {
   GlobalKey<FormState> _formKey = GlobalKey();
   String _email = '', _password = '', _username = '';
 
-  _submit() {
+  _submit() async {
     final isOk = _formKey.currentState.validate();
     print("form isOk $isOk");
-    if (isOk) {}
+    if (isOk) {
+      MyAPI myAPI = new MyAPI();
+
+      await myAPI.register(
+        context,
+        username: _username,
+        email: _email,
+        password: _password,
+      );
+    }
   }
 
   @override
@@ -64,6 +75,7 @@ class _RegisterFormState extends State<RegisterForm> {
               InputText(
                 keyboardType: TextInputType.emailAddress,
                 label: "PASSWORD",
+                obscureText: true,
                 fontSize: responsive.dp(responsive.isTablet ? 1.2 : 1.4),
                 onChanged: (text) {
                   _password = text;
