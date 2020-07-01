@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_api_rest/pages/home_page.dart';
+import 'package:flutter_api_rest/utils/auth.dart';
 import 'package:flutter_api_rest/utils/dialogs.dart';
 import 'package:meta/meta.dart';
 
@@ -26,6 +27,7 @@ class MyAPI {
           "password": password,
         },
       );
+      await Auth.instance.setSession(response.data);
       progressDialog.dismiss();
 
       Navigator.pushNamedAndRemoveUntil(
@@ -66,6 +68,8 @@ class MyAPI {
           "password": password,
         },
       );
+
+      await Auth.instance.setSession(response.data);
       progressDialog.dismiss();
 
       Navigator.pushNamedAndRemoveUntil(
@@ -93,6 +97,21 @@ class MyAPI {
       } else {
         print(e);
       }
+    }
+  }
+
+  Future<dynamic> refresh(String expiredToken) async {
+    try {
+      final Response response = await this._dio.post(
+            '/api/v1/refresh-token',
+            options: Options(headers: {
+              'token': expiredToken,
+            }),
+          );
+      return response.data;
+    } catch (e) {
+      print(e);
+      return null;
     }
   }
 }
