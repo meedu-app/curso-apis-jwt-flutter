@@ -16,8 +16,7 @@ class _LoginFormState extends State<LoginForm> {
     final isOk = _formKey.currentState.validate();
     print("form isOk $isOk");
     if (isOk) {
-      MyAPI myAPI = MyAPI();
-      myAPI.login(context, email: _email, password: _password);
+      MyAPI.instance.login(context, email: _email, password: _password);
     }
   }
 

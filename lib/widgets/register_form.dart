@@ -17,9 +17,7 @@ class _RegisterFormState extends State<RegisterForm> {
     final isOk = _formKey.currentState.validate();
     print("form isOk $isOk");
     if (isOk) {
-      MyAPI myAPI = new MyAPI();
-
-      await myAPI.register(
+      await MyAPI.instance.register(
         context,
         username: _username,
         email: _email,

@@ -41,5 +41,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Para actualizar la foto de perfil necesitamos acceder a las fotografias</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Para actualizar la foto de perfil necesitamos acceder a la cámara</string>
 </dict>
 </plist>

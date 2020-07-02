@@ -2,8 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AvatarButton extends StatelessWidget {
+  final String url;
+  final VoidCallback onPressed;
   final double imageSize;
-  const AvatarButton({Key key, this.imageSize = 100}) : super(key: key);
+  const AvatarButton({Key key, this.imageSize = 100, this.url, this.onPressed})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +27,10 @@ class AvatarButton extends StatelessWidget {
           ),
           child: ClipOval(
             child: Image.network(
-              'https://www.w3schools.com/howto/img_avatar.png',
+              this.url ?? 'https://www.w3schools.com/howto/img_avatar.png',
               width: this.imageSize,
               height: this.imageSize,
+              fit: BoxFit.cover,
             ),
           ),
         ),
@@ -51,7 +55,7 @@ class AvatarButton extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
             ),
-            onPressed: () {},
+            onPressed: this.onPressed,
           ),
         )
       ],
