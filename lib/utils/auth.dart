@@ -33,7 +33,7 @@ class Auth {
       print("time ${expiresIn - diff}");
       if (expiresIn - diff >= 60) {
         print("token alive");
-        _completer.complete();
+        _complete();
         return session.token;
       } else {
         final Map<String, dynamic> data =
@@ -41,16 +41,22 @@ class Auth {
         print("refresh token ");
         if (data != null) {
           await this.setSession(data);
-          _completer.complete();
+          _complete();
           return data['token'];
         }
-        _completer.complete();
+        _complete();
         return null;
       }
     }
-    _completer.complete();
+    _complete();
     print("session null");
     return null;
+  }
+
+  _complete() {
+    if (this._completer != null && !this._completer.isCompleted) {
+      this._completer.complete();
+    }
   }
 
   Future<void> setSession(Map<String, dynamic> data) async {
