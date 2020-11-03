@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_api_rest/api/authentication_api.dart';
+import 'package:flutter_api_rest/data/authentication_client.dart';
+import 'package:flutter_api_rest/pages/home_page.dart';
+import 'package:flutter_api_rest/utils/dialogs.dart';
 import 'package:flutter_api_rest/utils/responsive.dart';
+import 'package:get_it/get_it.dart';
 import 'input_text.dart';
 
 class LoginForm extends StatefulWidget {
@@ -8,13 +13,47 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
+  final _authenticationAPI = GetIt.instance<AuthenticationAPI>();
+  final _authenticationClient = GetIt.instance<AuthenticationClient>();
+
   GlobalKey<FormState> _formKey = GlobalKey();
   String _email = '', _password = '';
 
-  _submit() {
+  Future<void> _submit() async {
     final isOk = _formKey.currentState.validate();
-    print("form isOk $isOk");
-    if (isOk) {}
+
+    if (isOk) {
+      ProgressDialog.show(context);
+
+      final response = await _authenticationAPI.login(
+        email: _email,
+        password: _password,
+      );
+      ProgressDialog.dissmiss(context);
+      if (response.data != null) {
+        await _authenticationClient.saveSession(response.data);
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          HomePage.routeName,
+          (_) => false,
+        );
+      } else {
+        String message = response.error.message;
+        if (response.error.statusCode == -1) {
+          message = "Bad network";
+        } else if (response.error.statusCode == 403) {
+          message = "Invalid password";
+        } else if (response.error.statusCode == 404) {
+          message = "User not found";
+        }
+
+        Dialogs.alert(
+          context,
+          title: "ERROR",
+          description: message,
+        );
+      }
+    }
   }
 
   @override
@@ -61,8 +100,7 @@ class _LoginFormState extends State<LoginForm> {
                         label: "PASSWORD",
                         obscureText: true,
                         borderEnabled: false,
-                        fontSize:
-                            responsive.dp(responsive.isTablet ? 1.2 : 1.4),
+                        fontSize: responsive.dp(responsive.isTablet ? 1.2 : 1.4),
                         onChanged: (text) {
                           _password = text;
                         },
@@ -80,8 +118,7 @@ class _LoginFormState extends State<LoginForm> {
                         "Forgot Password",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize:
-                              responsive.dp(responsive.isTablet ? 1.2 : 1.5),
+                          fontSize: responsive.dp(responsive.isTablet ? 1.2 : 1.5),
                         ),
                       ),
                       onPressed: () {},

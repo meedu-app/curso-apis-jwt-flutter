@@ -41,5 +41,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>To update the user avatar we need access to gallery</string>
+	<key>NSCameraUsageDescription</key>
+	<string>To update the user avatar we need access to your camera</string>
 </dict>
 </plist>
